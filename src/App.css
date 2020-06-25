@@ -1,0 +1,14 @@
+.App {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+table, tr, thead, tbody, th, td {
+    border: 1px solid black;
+}
+
+th {
+    text-transform: uppercase;
+}
