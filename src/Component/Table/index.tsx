@@ -1,6 +1,9 @@
 import React, {Component} from 'react';
 import {format} from "date-fns";
 import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
+import AddIcon from '@material-ui/icons/Add';
+import Container from "@material-ui/core/Container";
+import Fab from "@material-ui/core/Fab";
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -29,6 +32,14 @@ const styles = (theme: Theme) => createStyles({
         top: 20,
         width: 1,
     },
+    fab: {
+        margin: 0,
+        top: 'auto',
+        right: 20,
+        bottom: 20,
+        left: 'auto',
+        position: 'fixed',
+    }
 });
 
 export type TableProps = TablePropsInterface & WithStyles<typeof styles>;
@@ -38,14 +49,14 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
         super(props);
 
         this.state = {
-            orderedColumn: 1,
+            orderedColumn: null,
             ordering: sortOrder.NONE,
         }
     }
 
-    handleRequestSort = (property: number) => {
-        const isAsc = this.state.orderedColumn === property && this.state.ordering === sortOrder.ASC;
-        this.setState({ordering: isAsc ? sortOrder.DESC : sortOrder.ASC, orderedColumn: property});
+    handleRequestSort = (column: number) => {
+        const isAsc: boolean = this.state.orderedColumn === column && this.state.ordering === sortOrder.ASC;
+        this.setState({ordering: isAsc ? sortOrder.DESC : sortOrder.ASC, orderedColumn: column});
     };
 
     renderRow = (profile: Cosmonaut) => {
@@ -90,18 +101,23 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
 
     render() {
         return (
-            <TableContainer>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            {headers.map((header: string, index: number) => this.renderHeader(header, index))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {data.map((element: Cosmonaut) => this.renderRow(element))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+            <Container>
+                <TableContainer>
+                    <Table>
+                        <TableHead>
+                            <TableRow>
+                                {headers.map((header: string, index: number) => this.renderHeader(header, index))}
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {data.map((element: Cosmonaut) => this.renderRow(element))}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <Fab color="primary" aria-label="add" className={this.props.classes.fab}>
+                    <AddIcon/>
+                </Fab>
+            </Container>
         )
     }
 }

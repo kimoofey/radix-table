@@ -1,5 +1,3 @@
-import React from "react";
-
 export interface Cosmonaut {
     name: string,
     date: number,
@@ -22,7 +20,7 @@ export interface TablePropsInterface {
 }
 
 export interface TableStateInterface {
-    orderedColumn: number;
+    orderedColumn: number | null;
     ordering: orderType;
 }
 
