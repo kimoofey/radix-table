@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface Cosmonaut {
     name: string,
     date: number,
@@ -5,3 +7,23 @@ export interface Cosmonaut {
     mission: string,
     isMultiple: boolean,
 }
+
+export interface AppPropsInterface {
+
+}
+
+export interface AppStateInterface {
+    data: Cosmonaut[],
+    showModal: boolean,
+}
+
+export interface TablePropsInterface {
+
+}
+
+export interface TableStateInterface {
+    orderedColumn: number;
+    ordering: orderType;
+}
+
+export type orderType = 'asc' | 'desc' | undefined;
