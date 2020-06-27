@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {format} from "date-fns";
 import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
@@ -49,21 +50,26 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
 
     renderRow = (profile: Cosmonaut) => {
         return (
-            <tr key={profile.name}>
-                <td>{profile.name}</td>
-                <td>{format(profile.date, 'dd/MM/yyyy')}</td>
-                <td>{profile.days}</td>
-                <td>{profile.mission}</td>
-                <td>{profile.isMultiple}</td>
-            </tr>
-        )
+            <TableRow
+                hover
+                role="checkbox"
+                tabIndex={-1}
+                key={profile.name}
+            >
+                <TableCell align="right">{profile.name}</TableCell>
+                <TableCell align="right">{format(profile.date, 'dd/MM/yyyy')}</TableCell>
+                <TableCell align="right">{profile.days}</TableCell>
+                <TableCell align="right">{profile.mission}</TableCell>
+                <TableCell align="right">{profile.isMultiple}</TableCell>
+            </TableRow>
+        );
     };
 
     renderHeader = (header: string, index: number) => {
         return (
             <TableCell
                 key={header}
-                align={'center'}
+                align={'right'}
                 sortDirection={this.state.orderedColumn === index ? this.state.ordering : false}
             >
                 <TableSortLabel
@@ -91,10 +97,10 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                             {headers.map((header: string, index: number) => this.renderHeader(header, index))}
                         </TableRow>
                     </TableHead>
+                    <TableBody>
+                        {data.map((element: Cosmonaut) => this.renderRow(element))}
+                    </TableBody>
                 </Table>
-                <tbody>
-                {data.map((element: Cosmonaut) => this.renderRow(element))}
-                </tbody>
             </TableContainer>
         )
     }
