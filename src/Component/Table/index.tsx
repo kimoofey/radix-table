@@ -242,8 +242,9 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Fab color="primary" aria-label="add" className={this.props.classes.fab}>
-                        <AddIcon onClick={this.handleOpenModal}/>
+                    <Fab color="primary" aria-label="add" className={this.props.classes.fab}
+                         onClick={this.handleOpenModal}>
+                        <AddIcon/>
                     </Fab>
                     <AddCosmonautModal isOpen={this.state.isOpenModal} handleClose={this.handleCloseModal}
                                        handleSubmit={this.handleSubmit}/>
