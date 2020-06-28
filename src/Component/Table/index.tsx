@@ -1,13 +1,11 @@
 import React, {Component} from 'react';
 import {format} from "date-fns";
-import {createStyles, lighten, makeStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
+import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import AddCosmonautModal from "../AddCosmonautModal";
 import Checkbox from '@material-ui/core/Checkbox';
 import Container from "@material-ui/core/Container";
-import DeleteIcon from '@material-ui/icons/Delete';
 import Fab from "@material-ui/core/Fab";
-import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -16,9 +14,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Tooltip from "@material-ui/core/Tooltip";
-import Typography from '@material-ui/core/Typography';
+import TableToolbar from "../TableToolbar";
 import {Cosmonaut, TablePropsInterface, TableStateInterface} from '../../types'
 import {data, headers, sortOrder} from "../../CONSTS";
 
@@ -54,49 +50,6 @@ const styles = (theme: Theme) => createStyles({
     },
 });
 
-const useToolbarStyles = makeStyles((theme: Theme) => ({
-    highlight:
-        theme.palette.type === 'light'
-            ? {
-                color: theme.palette.secondary.main,
-                backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-            }
-            : {
-                color: theme.palette.text.primary,
-                backgroundColor: theme.palette.secondary.dark,
-            },
-    title: {
-        flex: '1 1 100%',
-    },
-}));
-
-const EnhancedTableToolbar = (props: { numSelected: number }) => {
-    const classes = useToolbarStyles();
-    const {numSelected} = props;
-
-    return (
-        <Toolbar className={numSelected > 0 ? classes.highlight : undefined}>
-            {numSelected > 0 ? (
-                <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-                    {numSelected} selected
-                </Typography>
-            ) : (
-                <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
-                    Cosmonauts
-                </Typography>
-            )}
-
-            {numSelected > 0 ? (
-                <Tooltip title="Delete">
-                    <IconButton aria-label="delete">
-                        <DeleteIcon/>
-                    </IconButton>
-                </Tooltip>
-            ) : null}
-        </Toolbar>
-    );
-};
-
 export type TableProps = TablePropsInterface & WithStyles<typeof styles>;
 
 class TablePresenter extends Component<TableProps, TableStateInterface> {
@@ -111,6 +64,11 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
             selectedRows: [],
         }
     }
+
+    handleDelete = () => {
+        const newData = this.state.data.filter((profile: Cosmonaut) => !this.state.selectedRows.includes(profile.name));
+        this.setState({data: newData, selectedRows: []});
+    };
 
     handleRowClick = (event: React.MouseEvent, name: string) => {
         const selectedIndex = this.state.selectedRows.indexOf(name);
@@ -221,7 +179,7 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
         return (
             <Container className={this.props.classes.root}>
                 <Paper className={this.props.classes.paper}>
-                    <EnhancedTableToolbar numSelected={this.state.selectedRows.length}/>
+                    <TableToolbar numSelected={this.state.selectedRows.length} handleDelete={this.handleDelete}/>
                     <TableContainer>
                         <Table>
                             <TableHead>

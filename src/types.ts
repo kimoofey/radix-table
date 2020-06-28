@@ -38,3 +38,8 @@ export interface ModalPropsInterface {
 export interface ModalStateInterface {
     cosmonaut: Cosmonaut;
 }
+
+export interface TableToolbarProps {
+    numSelected: number;
+    handleDelete: () => void;
+}
