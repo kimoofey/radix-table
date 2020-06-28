@@ -26,39 +26,67 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
         super(props);
         this.state = {
             cosmonaut: emptyCosmonaut,
+            helperText: 'Cannot be empty!',
+            error: {
+                name: false,
+                date: false,
+                days: false,
+                mission: false,
+            }
         }
     }
 
+    checkFields = () => {
+        const {cosmonaut} = this.state;
+        this.setState({
+            error: {
+                name: cosmonaut.name === '',
+                date: cosmonaut.date === 0 || isNaN(cosmonaut.date),
+                days: cosmonaut.days === 0 || isNaN(cosmonaut.days),
+                mission: cosmonaut.mission === '',
+            }
+        });
+    };
+
     handleSubmit = (event: React.MouseEvent) => {
         const {handleSubmit} = this.props;
-        const {cosmonaut} = this.state;
-        handleSubmit(cosmonaut);
-        this.setState({cosmonaut: emptyCosmonaut});
+        const {cosmonaut, error} = this.state;
+        if (cosmonaut === emptyCosmonaut || error.name || error.date || error.days || error.mission) {
+            this.checkFields()
+        } else {
+            handleSubmit(cosmonaut);
+            this.setState({cosmonaut: emptyCosmonaut});
+        }
     };
 
     onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {cosmonaut} = this.state;
-        this.setState({cosmonaut: {...cosmonaut, name: event.target.value}});
+        this.setState({cosmonaut: {...cosmonaut, name: event.target.value}}, () => this.checkFields());
     };
 
     onChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {cosmonaut} = this.state;
-        this.setState({cosmonaut: {...cosmonaut, date: new Date(event.target.value).getTime()}});
+        this.setState({
+            cosmonaut: {
+                ...cosmonaut,
+                date: new Date(event.target.value).getTime()
+            }
+        }, () => this.checkFields());
     };
 
     onChangeDays = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {cosmonaut} = this.state;
-        this.setState({cosmonaut: {...cosmonaut, days: parseInt(event.target.value)}});
+        this.setState({cosmonaut: {...cosmonaut, days: parseInt(event.target.value)}}, () => this.checkFields());
     };
 
     onChangeMissions = (event: React.ChangeEvent<HTMLInputElement>) => {
         const {cosmonaut} = this.state;
-        this.setState({cosmonaut: {...cosmonaut, mission: event.target.value}});
+        this.setState({cosmonaut: {...cosmonaut, mission: event.target.value}}, () => this.checkFields());
     };
 
     onChangeCheckbox = () => {
         const {cosmonaut} = this.state;
-        this.setState({cosmonaut: {...cosmonaut, isMultiple: !cosmonaut.isMultiple}})
+        this.setState({cosmonaut: {...cosmonaut, isMultiple: !cosmonaut.isMultiple}});
     };
 
     render() {
@@ -67,7 +95,7 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
             isOpen,
             handleClose,
         } = this.props;
-        const {cosmonaut} = this.state;
+        const {cosmonaut, error, helperText} = this.state;
 
         return (
             <div>
@@ -82,6 +110,9 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                             type="text"
                             fullWidth
                             onChange={this.onChangeName}
+                            required
+                            helperText={error.name ? helperText : null}
+                            error={error.name}
                         />
                         <TextField
                             margin="dense"
@@ -93,6 +124,9 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                                 shrink: true,
                             }}
                             onChange={this.onChangeDate}
+                            required
+                            helperText={error.date ? helperText : null}
+                            error={error.date}
                         />
                         <TextField
                             margin="dense"
@@ -100,6 +134,9 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                             label="Days in flight"
                             type="number"
                             onChange={this.onChangeDays}
+                            required
+                            helperText={error.days ? helperText : null}
+                            error={error.days}
                         />
                         <TextField
                             margin="dense"
@@ -109,6 +146,9 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                             fullWidth
                             multiline
                             onChange={this.onChangeMissions}
+                            required
+                            helperText={error.mission ? helperText : null}
+                            error={error.mission}
                         />
                         <FormControlLabel
                             label="Have multiple flights"

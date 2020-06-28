@@ -37,6 +37,13 @@ export interface ModalPropsInterface {
 
 export interface ModalStateInterface {
     cosmonaut: Cosmonaut;
+    helperText: string;
+    error: {
+        name: boolean,
+        date: boolean,
+        days: boolean,
+        mission: boolean,
+    };
 }
 
 export interface TableToolbarProps {

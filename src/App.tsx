@@ -8,7 +8,7 @@ function App() {
             <h1>German cosmonauts</h1>
             <TablePresenter/>
             <footer>
-                Andrey Kim (c) 2020
+                Andrey Kim (c) 2020. For RADIX
             </footer>
         </div>
     );

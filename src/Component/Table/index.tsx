@@ -15,6 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableToolbar from "../TableToolbar";
+import Typography from "@material-ui/core/Typography";
 import {Cosmonaut, TablePropsInterface, TableStateInterface} from '../../types'
 import {headers, mockedData, sortOrder} from "../../CONSTS";
 
@@ -151,7 +152,7 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                     <div>{profile.mission}</div>
                 </TableCell>
                 <TableCell align="right">
-                    <div>{profile.isMultiple}</div>
+                    <div>{profile.isMultiple ? 'Yes' : 'No'}</div>
                 </TableCell>
             </TableRow>
         );
@@ -198,25 +199,29 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
             <Container className={classes.root}>
                 <Paper className={classes.paper}>
                     <TableToolbar numSelected={selectedRows.length} handleDelete={this.handleDelete}/>
-                    <TableContainer>
-                        <Table>
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox
-                                            indeterminate={selectedRows.length > 0 && selectedRows.length < data.length}
-                                            checked={data.length > 0 && selectedRows.length === data.length}
-                                            onChange={this.handleSelectAllClick}
-                                        />
-                                    </TableCell>
-                                    {headers.map((header: string, index: number) => this.renderHeader(header, index))}
-                                </TableRow>
-                            </TableHead>
-                            <TableBody>
-                                {data.map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
-                            </TableBody>
-                        </Table>
-                    </TableContainer>
+                    {data.length > 0
+                        ? <TableContainer>
+                            <Table>
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                indeterminate={selectedRows.length > 0 && selectedRows.length < data.length}
+                                                checked={data.length > 0 && selectedRows.length === data.length}
+                                                onChange={this.handleSelectAllClick}
+                                            />
+                                        </TableCell>
+                                        {headers.map((header: string, index: number) => this.renderHeader(header, index))}
+                                    </TableRow>
+                                </TableHead>
+                                <TableBody>
+                                    {data.map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
+                        : <Typography variant="h6" component="div">
+                            Table is empty. Add values!
+                        </Typography>}
                     <Fab color="primary" aria-label="add" className={classes.fab}
                          onClick={this.handleOpenModal}>
                         <AddIcon/>
