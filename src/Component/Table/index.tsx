@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {format} from "date-fns";
 import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
+import AddCosmonautModal from "../AddCosmonautModal";
 import Container from "@material-ui/core/Container";
 import Fab from "@material-ui/core/Fab";
 import Table from '@material-ui/core/Table';
@@ -51,8 +52,23 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
         this.state = {
             orderedColumn: null,
             ordering: sortOrder.NONE,
+            isOpenModal: false,
+            data: data,
         }
     }
+
+    handleSubmit = (cosmonaut: Cosmonaut) => {
+        this.setState({data: [...this.state.data, cosmonaut]});
+        this.handleCloseModal();
+    };
+
+    handleOpenModal = () => {
+        this.setState({isOpenModal: true});
+    };
+
+    handleCloseModal = () => {
+        this.setState({isOpenModal: false});
+    };
 
     handleRequestSort = (column: number) => {
         const isAsc: boolean = this.state.orderedColumn === column && this.state.ordering === sortOrder.ASC;
@@ -67,11 +83,21 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                 tabIndex={-1}
                 key={profile.name}
             >
-                <TableCell align="right">{profile.name}</TableCell>
-                <TableCell align="right">{format(profile.date, 'dd/MM/yyyy')}</TableCell>
-                <TableCell align="right">{profile.days}</TableCell>
-                <TableCell align="right">{profile.mission}</TableCell>
-                <TableCell align="right">{profile.isMultiple}</TableCell>
+                <TableCell align="right">
+                    <div>{profile.name}</div>
+                </TableCell>
+                <TableCell align="right">
+                    <div>{format(profile.date, 'dd/MM/yyyy')}</div>
+                </TableCell>
+                <TableCell align="right">
+                    <div>{profile.days}</div>
+                </TableCell>
+                <TableCell align="right">
+                    <div>{profile.mission}</div>
+                </TableCell>
+                <TableCell align="right">
+                    <div>{profile.isMultiple}</div>
+                </TableCell>
             </TableRow>
         );
     };
@@ -110,13 +136,15 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {data.map((element: Cosmonaut) => this.renderRow(element))}
+                            {this.state.data.map((element: Cosmonaut) => this.renderRow(element))}
                         </TableBody>
                     </Table>
                 </TableContainer>
                 <Fab color="primary" aria-label="add" className={this.props.classes.fab}>
-                    <AddIcon/>
+                    <AddIcon onClick={this.handleOpenModal}/>
                 </Fab>
+                <AddCosmonautModal isOpen={this.state.isOpenModal} handleClose={this.handleCloseModal}
+                                   handleSubmit={this.handleSubmit}/>
             </Container>
         )
     }
