@@ -16,7 +16,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableToolbar from "../TableToolbar";
 import {Cosmonaut, TablePropsInterface, TableStateInterface} from '../../types'
-import {data, headers, sortOrder} from "../../CONSTS";
+import {headers, mockedData, sortOrder} from "../../CONSTS";
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -55,45 +55,47 @@ export type TableProps = TablePropsInterface & WithStyles<typeof styles>;
 class TablePresenter extends Component<TableProps, TableStateInterface> {
     constructor(props: TableProps) {
         super(props);
-
         this.state = {
             orderedColumn: null,
             ordering: sortOrder.NONE,
             isOpenModal: false,
-            data: data,
+            data: mockedData,
             selectedRows: [],
         }
     }
 
     handleDelete = () => {
-        const newData = this.state.data.filter((profile: Cosmonaut) => !this.state.selectedRows.includes(profile.name));
+        const {data, selectedRows} = this.state;
+        const newData = data.filter((profile: Cosmonaut) => !selectedRows.includes(profile.name));
         this.setState({data: newData, selectedRows: []});
     };
 
     handleRowClick = (event: React.MouseEvent, name: string) => {
-        const selectedIndex = this.state.selectedRows.indexOf(name);
+        const {selectedRows} = this.state;
+        const selectedIndex = selectedRows.indexOf(name);
         let newSelected: string[] = [];
 
         if (selectedIndex === -1) {
-            newSelected = newSelected.concat(this.state.selectedRows, name);
+            newSelected = newSelected.concat(selectedRows, name);
         } else if (selectedIndex === 0) {
-            newSelected = newSelected.concat(this.state.selectedRows.slice(1));
-        } else if (selectedIndex === this.state.selectedRows.length - 1) {
-            newSelected = newSelected.concat(this.state.selectedRows.slice(0, -1));
+            newSelected = newSelected.concat(selectedRows.slice(1));
+        } else if (selectedIndex === selectedRows.length - 1) {
+            newSelected = newSelected.concat(selectedRows.slice(0, -1));
         } else if (selectedIndex > 0) {
             newSelected = newSelected.concat(
-                this.state.selectedRows.slice(0, selectedIndex),
-                this.state.selectedRows.slice(selectedIndex + 1),
+                selectedRows.slice(0, selectedIndex),
+                selectedRows.slice(selectedIndex + 1),
             );
         }
 
         this.setState({selectedRows: newSelected});
     };
 
-    handleSelectAllClick = (event: any) => {
+    handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {data} = this.state;
         if (event.target.checked) {
-            const newSelecteds = this.state.data.map((cosmonaut: Cosmonaut) => cosmonaut.name);
-            this.setState({selectedRows: newSelecteds});
+            const newSelected = data.map((cosmonaut: Cosmonaut) => cosmonaut.name);
+            this.setState({selectedRows: newSelected});
             return;
         }
         this.setState({selectedRows: []});
@@ -113,11 +115,14 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
     };
 
     handleRequestSort = (column: number) => {
-        const isAsc: boolean = this.state.orderedColumn === column && this.state.ordering === sortOrder.ASC;
+        const {orderedColumn, ordering} = this.state;
+        const isAsc: boolean = orderedColumn === column && ordering === sortOrder.ASC;
         this.setState({ordering: isAsc ? sortOrder.DESC : sortOrder.ASC, orderedColumn: column});
     };
 
     renderRow = (profile: Cosmonaut, index: number) => {
+        const {selectedRows} = this.state;
+
         return (
             <TableRow
                 hover
@@ -125,11 +130,11 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                 tabIndex={-1}
                 key={profile.name}
                 onClick={(event: React.MouseEvent) => this.handleRowClick(event, profile.name)}
-                selected={this.state.selectedRows.indexOf(profile.name) !== -1}
+                selected={selectedRows.indexOf(profile.name) !== -1}
             >
                 <TableCell padding="checkbox">
                     <Checkbox
-                        checked={this.state.selectedRows.indexOf(profile.name) !== -1}
+                        checked={selectedRows.indexOf(profile.name) !== -1}
                         inputProps={{'aria-labelledby': `enhanced-table-checkbox-${index}`}}
                     />
                 </TableCell>
@@ -153,21 +158,27 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
     };
 
     renderHeader = (header: string, index: number) => {
+        const {
+            orderedColumn,
+            ordering,
+        } = this.state;
+        const {classes} = this.props;
+
         return (
             <TableCell
                 key={header}
                 align={'right'}
-                sortDirection={this.state.orderedColumn === index ? this.state.ordering : false}
+                sortDirection={orderedColumn === index ? ordering : false}
             >
                 <TableSortLabel
-                    active={this.state.orderedColumn === index}
-                    direction={this.state.orderedColumn === index ? this.state.ordering : sortOrder.ASC}
+                    active={orderedColumn === index}
+                    direction={orderedColumn === index ? ordering : sortOrder.ASC}
                     onClick={() => this.handleRequestSort(index)}
                 >
                     {header}
-                    {this.state.orderedColumn === index ? (
-                        <span className={this.props.classes.visuallyHidden}>
-                  {this.state.ordering === sortOrder.DESC ? sortOrder.DESC : sortOrder.ASC}
+                    {orderedColumn === index ? (
+                        <span className={classes.visuallyHidden}>
+                  {ordering === sortOrder.DESC ? sortOrder.DESC : sortOrder.ASC}
                 </span>
                     ) : null}
                 </TableSortLabel>
@@ -176,35 +187,41 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
     };
 
     render() {
+        const {
+            selectedRows,
+            data,
+            isOpenModal,
+        } = this.state;
+        const {classes} = this.props;
+
         return (
-            <Container className={this.props.classes.root}>
-                <Paper className={this.props.classes.paper}>
-                    <TableToolbar numSelected={this.state.selectedRows.length} handleDelete={this.handleDelete}/>
+            <Container className={classes.root}>
+                <Paper className={classes.paper}>
+                    <TableToolbar numSelected={selectedRows.length} handleDelete={this.handleDelete}/>
                     <TableContainer>
                         <Table>
                             <TableHead>
                                 <TableRow>
                                     <TableCell padding="checkbox">
                                         <Checkbox
-                                            indeterminate={this.state.selectedRows.length > 0 && this.state.selectedRows.length < this.state.data.length}
-                                            checked={this.state.data.length > 0 && this.state.selectedRows.length === this.state.data.length}
+                                            indeterminate={selectedRows.length > 0 && selectedRows.length < data.length}
+                                            checked={data.length > 0 && selectedRows.length === data.length}
                                             onChange={this.handleSelectAllClick}
-                                            inputProps={{'aria-label': 'select all desserts'}}
                                         />
                                     </TableCell>
                                     {headers.map((header: string, index: number) => this.renderHeader(header, index))}
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {this.state.data.map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
+                                {data.map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
                             </TableBody>
                         </Table>
                     </TableContainer>
-                    <Fab color="primary" aria-label="add" className={this.props.classes.fab}
+                    <Fab color="primary" aria-label="add" className={classes.fab}
                          onClick={this.handleOpenModal}>
                         <AddIcon/>
                     </Fab>
-                    <AddCosmonautModal isOpen={this.state.isOpenModal} handleClose={this.handleCloseModal}
+                    <AddCosmonautModal isOpen={isOpenModal} handleClose={this.handleCloseModal}
                                        handleSubmit={this.handleSubmit}/>
                 </Paper>
             </Container>

@@ -1,3 +1,4 @@
+import React from "react";
 import {lighten, makeStyles, Theme} from "@material-ui/core/styles";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
@@ -5,7 +6,6 @@ import Tooltip from "@material-ui/core/Tooltip/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from '@material-ui/icons/Delete';
 import {TableToolbarProps} from "../../types";
-import React from "react";
 
 const useToolbarStyles = makeStyles((theme: Theme) => ({
     highlight: {

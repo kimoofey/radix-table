@@ -29,35 +29,49 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
         }
     }
 
-    handleSubmit = (e: React.MouseEvent) => {
-        this.props.handleSubmit(this.state.cosmonaut);
+    handleSubmit = (event: React.MouseEvent) => {
+        const {handleSubmit} = this.props;
+        const {cosmonaut} = this.state;
+        handleSubmit(cosmonaut);
         this.setState({cosmonaut: emptyCosmonaut});
     };
 
-    onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({cosmonaut: {...this.state.cosmonaut, name: e.target.value}});
+    onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {cosmonaut} = this.state;
+        this.setState({cosmonaut: {...cosmonaut, name: event.target.value}});
     };
 
-    onChangeDate = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({cosmonaut: {...this.state.cosmonaut, date: new Date(e.target.value).getTime()}});
+    onChangeDate = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {cosmonaut} = this.state;
+        this.setState({cosmonaut: {...cosmonaut, date: new Date(event.target.value).getTime()}});
     };
 
-    onChangeDays = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({cosmonaut: {...this.state.cosmonaut, days: parseInt(e.target.value)}});
+    onChangeDays = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {cosmonaut} = this.state;
+        this.setState({cosmonaut: {...cosmonaut, days: parseInt(event.target.value)}});
     };
 
-    onChangeMissions = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({cosmonaut: {...this.state.cosmonaut, mission: e.target.value}});
+    onChangeMissions = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const {cosmonaut} = this.state;
+        this.setState({cosmonaut: {...cosmonaut, mission: event.target.value}});
     };
 
     onChangeCheckbox = () => {
-        this.setState({cosmonaut: {...this.state.cosmonaut, isMultiple: !this.state.cosmonaut.isMultiple}})
+        const {cosmonaut} = this.state;
+        this.setState({cosmonaut: {...cosmonaut, isMultiple: !cosmonaut.isMultiple}})
     };
 
     render() {
+        const {
+            classes,
+            isOpen,
+            handleClose,
+        } = this.props;
+        const {cosmonaut} = this.state;
+
         return (
             <div>
-                <Dialog open={this.props.isOpen} onClose={this.props.handleClose} aria-labelledby="form-dialog-title">
+                <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add new cosmonaut</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -74,7 +88,7 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                             id="date"
                             label="Date of flight"
                             type="date"
-                            className={this.props.classes.textField}
+                            className={classes.textField}
                             InputLabelProps={{
                                 shrink: true,
                             }}
@@ -100,7 +114,7 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                             label="Have multiple flights"
                             control={
                                 <Checkbox
-                                    checked={this.state.cosmonaut.isMultiple}
+                                    checked={cosmonaut.isMultiple}
                                     onChange={() => this.onChangeCheckbox()}
                                     name="checkedB"
                                     color="primary"
@@ -109,7 +123,7 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={this.props.handleClose} color="primary">
+                        <Button onClick={handleClose} color="primary">
                             Cancel
                         </Button>
                         <Button onClick={this.handleSubmit} color="primary">

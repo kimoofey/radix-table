@@ -1,6 +1,6 @@
 import {Cosmonaut, orderType} from "./types";
 
-export const data: Cosmonaut[] = [
+export const mockedData: Cosmonaut[] = [
     {"name": "Sigmund Jähn", "date": 272926800, "days": 7, "mission": "Sojus 31 / Sojus 29", "isMultiple": false},
     {"name": "Ulf Merbold", "date": 438814800, "days": 10, "mission": "STS-9", "isMultiple": true},
     {"name": "Reinhard Furrer", "date": 499467600, "days": 7, "mission": "STS-61-A (D1)", "isMultiple": false},
