@@ -44,3 +44,11 @@ export const sortOrder: { NONE: orderType, ASC: orderType, DESC: orderType } = {
     ASC: 'asc',
     DESC: 'desc'
 };
+
+export const emptyCosmonaut = {
+    name: '',
+    date: 0,
+    days: 0,
+    mission: '',
+    isMultiple: false,
+};

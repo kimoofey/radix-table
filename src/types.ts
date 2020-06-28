@@ -26,6 +26,7 @@ export interface TableStateInterface {
     ordering: orderType;
     isOpenModal: boolean;
     data: Cosmonaut[];
+    selectedRows: string[];
 }
 
 export interface ModalPropsInterface {

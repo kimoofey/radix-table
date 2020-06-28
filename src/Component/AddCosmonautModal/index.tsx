@@ -9,6 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {ModalPropsInterface, ModalStateInterface} from "../../types";
+import {emptyCosmonaut} from "../../CONSTS";
 
 const styles = (theme: Theme) => createStyles({
     textField: {
@@ -24,18 +25,13 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
     constructor(props: ModalProps) {
         super(props);
         this.state = {
-            cosmonaut: {
-                name: '',
-                date: 0,
-                days: 0,
-                mission: '',
-                isMultiple: false,
-            }
+            cosmonaut: emptyCosmonaut,
         }
     }
 
     handleSubmit = (e: React.MouseEvent) => {
         this.props.handleSubmit(this.state.cosmonaut);
+        this.setState({cosmonaut: emptyCosmonaut});
     };
 
     onChangeName = (e: React.ChangeEvent<HTMLInputElement>) => {
