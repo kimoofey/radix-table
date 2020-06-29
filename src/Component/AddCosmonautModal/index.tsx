@@ -33,22 +33,24 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
 
     checkFields = () => {
         const {cosmonaut} = this.state;
-        this.setState({
-            error: {
-                name: cosmonaut.name === '',
-                date: cosmonaut.date === 0 || isNaN(cosmonaut.date),
-                days: cosmonaut.days === 0 || isNaN(cosmonaut.days),
-                mission: cosmonaut.mission === '',
-            }
-        });
+        return new Promise(resolve => {
+            this.setState({
+                error: {
+                    name: cosmonaut.name === '',
+                    date: cosmonaut.date === 0 || isNaN(cosmonaut.date),
+                    days: cosmonaut.days === 0 || isNaN(cosmonaut.days),
+                    mission: cosmonaut.mission === '',
+                }
+            });
+            resolve(this.state.error);
+        })
     };
 
-    handleSubmit = (event: React.MouseEvent) => {
+    handleSubmit = async (event: React.MouseEvent) => {
         const {handleSubmit} = this.props;
         const {cosmonaut, error} = this.state;
-        if (cosmonaut === emptyCosmonaut || error.name || error.date || error.days || error.mission) {
-            this.checkFields();
-        } else {
+        const result = await this.checkFields();
+        if (!(cosmonaut === emptyCosmonaut || error.name || error.date || error.days || error.mission)) {
             handleSubmit(cosmonaut);
             this.setState({cosmonaut: emptyCosmonaut, error: emptyErrors});
         }
