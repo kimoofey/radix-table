@@ -52,3 +52,10 @@ export const emptyCosmonaut = {
     mission: '',
     isMultiple: false,
 };
+
+export const emptyErrors = {
+    name: false,
+    date: false,
+    days: false,
+    mission: false,
+};

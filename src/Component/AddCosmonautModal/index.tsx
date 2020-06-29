@@ -9,7 +9,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import {ModalPropsInterface, ModalStateInterface} from "../../types";
-import {emptyCosmonaut} from "../../CONSTS";
+import {emptyCosmonaut, emptyErrors} from "../../CONSTS";
 
 const styles = (theme: Theme) => createStyles({
     textField: {
@@ -27,12 +27,7 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
         this.state = {
             cosmonaut: emptyCosmonaut,
             helperText: 'Cannot be empty!',
-            error: {
-                name: false,
-                date: false,
-                days: false,
-                mission: false,
-            }
+            error: emptyErrors,
         }
     }
 
@@ -52,11 +47,17 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
         const {handleSubmit} = this.props;
         const {cosmonaut, error} = this.state;
         if (cosmonaut === emptyCosmonaut || error.name || error.date || error.days || error.mission) {
-            this.checkFields()
+            this.checkFields();
         } else {
             handleSubmit(cosmonaut);
-            this.setState({cosmonaut: emptyCosmonaut});
+            this.setState({cosmonaut: emptyCosmonaut, error: emptyErrors});
         }
+    };
+
+    handleClose = (event: React.MouseEvent) => {
+        const {handleClose} = this.props;
+        this.setState({cosmonaut: emptyCosmonaut, error: emptyErrors});
+        handleClose();
     };
 
     onChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -93,13 +94,12 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
         const {
             classes,
             isOpen,
-            handleClose,
         } = this.props;
         const {cosmonaut, error, helperText} = this.state;
 
         return (
             <div>
-                <Dialog open={isOpen} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <Dialog open={isOpen} onClose={this.handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add new cosmonaut</DialogTitle>
                     <DialogContent>
                         <TextField
@@ -163,7 +163,7 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
                         />
                     </DialogContent>
                     <DialogActions>
-                        <Button onClick={handleClose} color="primary">
+                        <Button onClick={this.handleClose} color="primary">
                             Cancel
                         </Button>
                         <Button onClick={this.handleSubmit} color="primary">
