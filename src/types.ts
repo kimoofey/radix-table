@@ -29,6 +29,8 @@ export interface TableStateInterface {
     isOpenModal: boolean;
     data: Cosmonaut[];
     selectedRows: string[];
+    rowsPerPage: number;
+    page: number;
 }
 
 export interface ModalPropsInterface {

@@ -15,6 +15,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableToolbar from "../TableToolbar";
+import TablePagination from "@material-ui/core/TablePagination";
 import Typography from "@material-ui/core/Typography";
 import {Cosmonaut, TablePropsInterface, TableStateInterface} from '../../types'
 import {headers, mockedData, sortOrder} from "../../CONSTS";
@@ -63,8 +64,18 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
             isOpenModal: false,
             data: mockedData,
             selectedRows: [],
+            rowsPerPage: 5,
+            page: 0,
         }
     }
+
+    handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({rowsPerPage: parseInt(event.target.value), page: 0});
+    };
+
+    handleChangePage = (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, newPage: number) => {
+        this.setState({page: newPage});
+    };
 
     handleDelete = () => {
         const {data, selectedRows} = this.state;
@@ -194,7 +205,9 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
             data,
             isOpenModal,
             ordering,
-            orderedColumn
+            orderedColumn,
+            rowsPerPage,
+            page,
         } = this.state;
         const {classes} = this.props;
 
@@ -218,7 +231,9 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {sortArrayOfObjects(data, ordering, orderedColumn).map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
+                                    {sortArrayOfObjects(data, ordering, orderedColumn)
+                                        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                        .map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
                                 </TableBody>
                             </Table>
                         </TableContainer>
@@ -231,6 +246,15 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                     </Fab>
                     <AddCosmonautModal isOpen={isOpenModal} handleClose={this.handleCloseModal}
                                        handleSubmit={this.handleSubmit}/>
+                    <TablePagination
+                        rowsPerPageOptions={[5, 10, 25]}
+                        component="div"
+                        count={data.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onChangePage={this.handleChangePage}
+                        onChangeRowsPerPage={this.handleChangeRowsPerPage}
+                    />
                 </Paper>
             </Container>
         )
