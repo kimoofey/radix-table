@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {format} from "date-fns";
 import {createStyles, Theme, withStyles, WithStyles} from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import AddCosmonautModal from "../AddCosmonautModal";
@@ -17,9 +16,9 @@ import TableSortLabel from '@material-ui/core/TableSortLabel';
 import TableToolbar from "../TableToolbar";
 import TablePagination from "@material-ui/core/TablePagination";
 import Typography from "@material-ui/core/Typography";
-import {Cosmonaut, TablePropsInterface, TableStateInterface} from '../../types'
+import {Cosmonaut, TableStateInterface} from '../../types'
 import {headers, mockedData, sortOrder} from "../../CONSTS";
-import {sortArrayOfObjects} from "../../Utils";
+import {formatDateForTable, sortArrayOfObjects} from "../../Utils";
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -53,7 +52,7 @@ const styles = (theme: Theme) => createStyles({
     },
 });
 
-export type TableProps = TablePropsInterface & WithStyles<typeof styles>;
+export type TableProps = WithStyles<typeof styles>;
 
 class TablePresenter extends Component<TableProps, TableStateInterface> {
     constructor(props: TableProps) {
@@ -155,7 +154,7 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                     <div>{profile.name}</div>
                 </TableCell>
                 <TableCell align="right">
-                    <div>{format(profile.date, 'dd/MM/yyyy')}</div>
+                    <div>{formatDateForTable(profile.date)}</div>
                 </TableCell>
                 <TableCell align="right">
                     <div>{profile.days}</div>

@@ -10,19 +10,6 @@ export type orderType = 'asc' | 'desc' | undefined;
 
 export type CosmonautKeys = keyof Cosmonaut;
 
-export interface AppPropsInterface {
-
-}
-
-export interface AppStateInterface {
-    data: Cosmonaut[];
-    showModal: boolean;
-}
-
-export interface TablePropsInterface {
-
-}
-
 export interface TableStateInterface {
     orderedColumn: number;
     ordering: orderType;
@@ -43,14 +30,20 @@ export interface ModalStateInterface {
     cosmonaut: Cosmonaut;
     helperText: string;
     error: {
-        name: boolean,
-        date: boolean,
-        days: boolean,
-        mission: boolean,
+        name: boolean;
+        date: boolean;
+        days: boolean;
+        mission: boolean;
     };
 }
 
 export interface TableToolbarProps {
     numSelected: number;
     handleDelete: () => void;
+}
+
+export interface sortInterface {
+    NONE: orderType;
+    ASC: orderType;
+    DESC: orderType;
 }

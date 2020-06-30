@@ -1,5 +1,8 @@
+import {format} from "date-fns";
 import {Cosmonaut, orderType} from "../types";
 import {headers, sortOrder} from "../CONSTS";
+
+export const formatDateForTable = (date: number) => format(date, 'dd/MM/yyyy');
 
 export function sortArrayOfObjects(array: Cosmonaut[], ordering: orderType, orderBy: number) {
     if (orderBy < 0)
