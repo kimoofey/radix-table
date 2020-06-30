@@ -18,6 +18,7 @@ import TableToolbar from "../TableToolbar";
 import Typography from "@material-ui/core/Typography";
 import {Cosmonaut, TablePropsInterface, TableStateInterface} from '../../types'
 import {headers, mockedData, sortOrder} from "../../CONSTS";
+import {sortArrayOfObjects} from "../../Utils";
 
 const styles = (theme: Theme) => createStyles({
     root: {
@@ -57,7 +58,7 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
     constructor(props: TableProps) {
         super(props);
         this.state = {
-            orderedColumn: null,
+            orderedColumn: -1,
             ordering: sortOrder.NONE,
             isOpenModal: false,
             data: mockedData,
@@ -192,6 +193,8 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
             selectedRows,
             data,
             isOpenModal,
+            ordering,
+            orderedColumn
         } = this.state;
         const {classes} = this.props;
 
@@ -215,7 +218,7 @@ class TablePresenter extends Component<TableProps, TableStateInterface> {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {data.map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
+                                    {sortArrayOfObjects(data, ordering, orderedColumn).map((element: Cosmonaut, index: number) => this.renderRow(element, index))}
                                 </TableBody>
                             </Table>
                         </TableContainer>

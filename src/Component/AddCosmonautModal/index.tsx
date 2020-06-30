@@ -49,7 +49,7 @@ class AddCosmonautModal extends Component<ModalProps, ModalStateInterface> {
     handleSubmit = async (event: React.MouseEvent) => {
         const {handleSubmit} = this.props;
         const {cosmonaut, error} = this.state;
-        const result = await this.checkFields();
+        await this.checkFields();
         if (!(cosmonaut === emptyCosmonaut || error.name || error.date || error.days || error.mission)) {
             handleSubmit(cosmonaut);
             this.setState({cosmonaut: emptyCosmonaut, error: emptyErrors});

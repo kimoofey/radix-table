@@ -1,4 +1,4 @@
-import {Cosmonaut, orderType} from "./types";
+import {Cosmonaut, CosmonautKeys, orderType} from "./types";
 
 export const mockedData: Cosmonaut[] = [
     {"name": "Sigmund Jähn", "date": 272926800, "days": 7, "mission": "Sojus 31 / Sojus 29", "isMultiple": false},
@@ -37,7 +37,7 @@ export const mockedData: Cosmonaut[] = [
         "isMultiple": false
     }];
 
-export const headers = ['Name', 'Date', 'Days', 'Mission', 'isMultiple'];
+export const headers: CosmonautKeys[] = ['name', 'date', 'days', 'mission', 'isMultiple'];
 
 export const sortOrder: { NONE: orderType, ASC: orderType, DESC: orderType } = {
     NONE: undefined,

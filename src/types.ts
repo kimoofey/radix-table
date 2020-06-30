@@ -8,6 +8,8 @@ export interface Cosmonaut {
 
 export type orderType = 'asc' | 'desc' | undefined;
 
+export type CosmonautKeys = keyof Cosmonaut;
+
 export interface AppPropsInterface {
 
 }
@@ -22,7 +24,7 @@ export interface TablePropsInterface {
 }
 
 export interface TableStateInterface {
-    orderedColumn: number | null;
+    orderedColumn: number;
     ordering: orderType;
     isOpenModal: boolean;
     data: Cosmonaut[];
